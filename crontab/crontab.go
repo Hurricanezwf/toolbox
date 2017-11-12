@@ -1,42 +1,59 @@
-// 迅速添加任务
-// 不太慢的删除任务
-// 添加任务对其他任务执行干扰小
 package crontab
 
-import "time"
+import "errors"
 
-func Add(t *Task) {
+var (
+	crond   *Crond
+	tasksrd map[string]struct{}
+)
 
-}
+var (
+	ErrNotOpen = errors.New("not open")
+	ErrExist   = errors.New("task has been existed")
+)
 
-//////////////////////////////////////////////////
-type TaskFunc func(param interface{}) error
-
-type Task struct {
-	// 任务名
-	TaskName string
-
-	// 任务到点后的执行函数
-	DoFunc    TaskFunc
-	FuncParam interface{}
-
-	// crontab的执行时间配置
-	Spec string
-
-	// 任务的开始时间,可以是创建的时间或者暂停后重新开始的时间
-	StartTime int64
-
-	// 任务最近一次执行时间
-	LastExecTime int64
-}
-
-func NewTask(tname, spec string, f TaskFunc, fParam interface{}) *Task {
-	return &Task{
-		TaskName:     tname,
-		Spec:         spec,
-		DoFunc:       f,
-		FuncParam:    fParam,
-		StartTime:    time.Now().Unix(),
-		LastExecTime: 0,
+func Open() {
+	if crond == nil {
+		crond = &Crond{}
 	}
+	if tasksrd == nil {
+		tasksrd = make(map[string]struct{})
+	}
+
+	go crond.Run()
+}
+
+func Close() {
+	crond.Close()
+	crond = nil
+	tasksrd = nil
+}
+
+func Add(t *Task) error {
+	if crond == nil {
+		return ErrNotOpen
+	}
+	if t == nil {
+		return errors.New("nil task")
+	}
+
+	if _, ok := tasksrd[t.TaskName]; ok {
+		return ErrExist
+	}
+	if err := crond.Add(t); err != nil {
+		return err
+	}
+	tasksrd[t.TaskName] = struct{}{}
+
+	return nil
+}
+
+func Del(taskName string) (affectedNum int) {
+	if crond == nil {
+		return 0
+	}
+	if _, ok := tasksrd[taskName]; !ok {
+		return 0
+	}
+	return crond.Del(taskName)
 }
