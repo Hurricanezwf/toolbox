@@ -15,7 +15,7 @@ type Crond struct {
 	mutex sync.RWMutex
 	h     *heap.MinHeap
 
-	changeC chan struct{}
+	changedC chan bool
 
 	running bool
 	stopC   chan struct{}
@@ -29,7 +29,7 @@ func (c *Crond) Run() {
 	c.running = true
 
 	c.h = heap.NewMinHeap(1024)
-	c.changeC = make(chan struct{}, 1)
+	c.changedC = make(chan bool)
 	c.stopC = make(chan struct{})
 
 	for {
@@ -58,7 +58,7 @@ func (c *Crond) Run() {
 		select {
 		case <-c.stopC:
 			return
-		case <-c.changeC:
+		case <-c.changedC:
 			continue
 		case <-time.After(sleep):
 			c.PopAndRepush(true)
@@ -72,7 +72,7 @@ func (c *Crond) Close() {
 	c.running = false
 }
 
-func (c *Crond) Add(t *Task) error {
+func (c *Crond) Add(t *Task, notifyChange bool) error {
 	if t == nil {
 		return errors.New("nil task")
 	}
@@ -99,7 +99,9 @@ func (c *Crond) Add(t *Task) error {
 	})
 	c.mutex.Unlock()
 	if setCount > 0 {
-		c.changeC <- struct{}{}
+		if notifyChange {
+			c.changedC <- true
+		}
 		return nil
 	}
 
@@ -114,7 +116,9 @@ func (c *Crond) Add(t *Task) error {
 		return err
 	}
 
-	c.changeC <- struct{}{}
+	if notifyChange {
+		c.changedC <- true
+	}
 
 	return nil
 }
@@ -136,7 +140,7 @@ func (c *Crond) Del(taskName string) int {
 	})
 	c.mutex.Unlock()
 	if affected > 0 {
-		c.changeC <- struct{}{}
+		c.changedC <- true
 	}
 	return affected
 }
@@ -164,6 +168,6 @@ func (c *Crond) PopAndRepush(doFunc bool) {
 			go t.doFuncCall()
 		}
 		t.setNext()
-		c.Add(t)
+		c.Add(t, false)
 	}
 }

@@ -40,7 +40,7 @@ func Add(t *Task) error {
 	if _, ok := tasksrd[t.TaskName]; ok {
 		return ErrExist
 	}
-	if err := crond.Add(t); err != nil {
+	if err := crond.Add(t, true); err != nil {
 		return err
 	}
 	tasksrd[t.TaskName] = struct{}{}

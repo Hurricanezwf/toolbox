@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"runtime"
 	"syscall"
+	"time"
 	"toolbox/crontab"
 )
 
@@ -20,11 +21,11 @@ func main() {
 	t2 := crontab.NewTask("test2", "0/5 * * * * *", Do2, nil)
 	crontab.Add(t2)
 
-	//time.Sleep(5 * time.Second)
-	//aff := crontab.Del("test")
-	//log.Printf("Affeted num: %d\n", aff)
+	time.Sleep(5 * time.Second)
+	aff := crontab.Del("test1")
+	log.Printf("Affeted num: %d\n", aff)
 
-	//time.Sleep(5 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
