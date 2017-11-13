@@ -4,7 +4,7 @@ import "errors"
 
 var (
 	crond   *Crond
-	tasksrd map[string]struct{}
+	tasksrd map[string]*Task
 )
 
 var (
@@ -14,10 +14,10 @@ var (
 
 func Open() {
 	if crond == nil {
-		crond = &Crond{}
+		crond = NewCrond()
 	}
 	if tasksrd == nil {
-		tasksrd = make(map[string]struct{})
+		tasksrd = make(map[string]*Task)
 	}
 
 	go crond.Run()
@@ -43,17 +43,29 @@ func Add(t *Task) error {
 	if err := crond.Add(t, true); err != nil {
 		return err
 	}
-	tasksrd[t.TaskName] = struct{}{}
+	tasksrd[t.TaskName] = t
 
 	return nil
 }
 
-func Del(taskName string) (affectedNum int) {
+func Del(taskName string) (affected int) {
 	if crond == nil {
 		return 0
 	}
 	if _, ok := tasksrd[taskName]; !ok {
 		return 0
 	}
-	return crond.Del(taskName)
+	affected = crond.Del(taskName)
+	if affected > 0 {
+		delete(tasksrd, taskName)
+	}
+	return affected
+}
+
+func List() []string {
+	res := make([]string, 0, len(tasksrd))
+	for _, t := range tasksrd {
+		res = append(res, t.String())
+	}
+	return res
 }

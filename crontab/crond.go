@@ -21,16 +21,21 @@ type Crond struct {
 	stopC   chan struct{}
 }
 
+func NewCrond() *Crond {
+	return &Crond{
+		h:        heap.NewMinHeap(1024),
+		changedC: make(chan bool),
+		stopC:    make(chan struct{}),
+		running:  false,
+	}
+}
+
 func (c *Crond) Run() {
 	if c.running {
 		return
 	}
 
 	c.running = true
-
-	c.h = heap.NewMinHeap(1024)
-	c.changedC = make(chan bool)
-	c.stopC = make(chan struct{})
 
 	for {
 		sleep := func() time.Duration {

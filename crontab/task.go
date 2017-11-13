@@ -1,6 +1,7 @@
 package crontab
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"strconv"
@@ -63,6 +64,7 @@ type Task struct {
 	next time.Time
 }
 
+// You should call SpecValid() to check if spec is valid before NewTask, or your program may be panic
 func NewTask(tname, spec string, f TaskFunc, fParam interface{}) *Task {
 	t := &Task{
 		TaskName:  tname,
@@ -82,6 +84,10 @@ func (t *Task) doFuncCall() {
 func (t *Task) setNext() {
 	t.next = t.spec.Next(t.base)
 	t.base = t.next
+}
+
+func (t *Task) String() string {
+	return fmt.Sprintf("%s\t%s", t.TaskName, t.specStr)
 }
 
 // six columns mean：
@@ -428,4 +434,13 @@ func getBits(min, max, step uint) uint64 {
 // all returns all bits within the given bounds.  (plus the star bit)
 func all(r bounds) uint64 {
 	return getBits(r.min, r.max, 1) | starBit
+}
+
+// You should check spec before NewTask, or your program may be panic
+func SpecValid(spec string) (valid bool) {
+	defer func() {
+		recover()
+	}()
+	NewTask("puppet", spec, nil, nil)
+	return true
 }
