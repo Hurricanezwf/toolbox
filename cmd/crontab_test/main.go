@@ -77,7 +77,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("/list")
+	log.Printf("[/list]")
 
 	res := crontab.List()
 	str := strings.Join(res, "\n")
