@@ -77,6 +77,8 @@ func (c *Concurrency) Get() {
 	for {
 		if _, ok := <-c.ch; ok {
 			break
+		} else {
+			// ok为flase的时候，可能正在进行ResetMax操作
 		}
 		time.Sleep(1 * time.Millisecond)
 	}
