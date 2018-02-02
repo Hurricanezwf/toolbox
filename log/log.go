@@ -132,5 +132,6 @@ func (l *Log) Apply(lc *LogConf) {
 
 	l.cfg = lc
 	config := fmt.Sprintf("{\"filename\":\"%s\",\"level\":%d}", lc.logFile, lc.logLevel)
+	l.log.DelLogger(lc.logWay)
 	l.log.SetLogger(lc.logWay, config)
 }
