@@ -1,0 +1,4 @@
+postman用于从文件读取http请求所需的参数，然后发送对应的请求并获取结果, POST支持表单提交和Payload提交
+注意：仅限于返回结构是JSON的情况
+
+用法: postman -f a.json

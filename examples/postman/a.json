@@ -1,0 +1,17 @@
+{
+	"url": "http://localhost:11140/v2/host",
+	"method": "post",
+	"header": {
+		"Content-Type": "application/json"
+	},
+	"param": {
+		"Key1": "Value1"
+	},
+	"body": {
+		"name": "xxx"
+	},
+	"option": {
+		"connect_timeout": 5,
+		"readwrite_timeout": 10
+	}
+}
