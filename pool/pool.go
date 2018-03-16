@@ -5,6 +5,40 @@ import (
 	"time"
 )
 
+// LimitPool; 带缓冲大小的buffer
+type LimitPool struct {
+	limit int
+	p     chan interface{}
+}
+
+func NewLimitPool(limit int) *LimitPool {
+	if limit <= 0 {
+		panic("BufferedPool: limit <= 0")
+	}
+
+	return &LimitPool{
+		limit: limit,
+		p:     make(chan interface{}, limit),
+	}
+}
+
+// Fill: 将所有元素填充为nil
+func (l *LimitPool) Fill() *LimitPool {
+	for i := 0; i < l.limit; i++ {
+		l.p <- nil
+	}
+	return l
+}
+
+func (l *LimitPool) Put(v interface{}) {
+	l.p <- v
+}
+
+func (l *LimitPool) Get() interface{} {
+	return <-l.p
+}
+
+// Concurrency: 并发数控制
 // 保证并发数至少为1
 type Concurrency struct {
 	mutex  sync.Mutex
