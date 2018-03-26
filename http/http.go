@@ -5,10 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"time"
 
 	"github.com/astaxie/beego/httplib"
 )
+
+// 如果你想打印出Http请求报文,可以将这个开关置为true
+var EnableHTTPDebug bool
 
 type Options struct {
 	Headers        map[string]string
@@ -81,11 +85,15 @@ func send(req *httplib.BeegoHTTPRequest, option *Options, result interface{}) er
 		}
 	}
 
-	resp, err := req.Response()
+	resp, err := req.Debug(EnableHTTPDebug).Response()
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if EnableHTTPDebug {
+		log.Println(string(req.DumpRequest()))
+	}
 
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("StatusCode(%d) != 200", resp.StatusCode)

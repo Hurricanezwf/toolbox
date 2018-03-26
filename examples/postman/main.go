@@ -1,6 +1,10 @@
 package main
 
-import "flag"
+import (
+	"flag"
+
+	"github.com/Hurricanezwf/toolbox/http"
+)
 
 var tpl string
 
@@ -10,6 +14,8 @@ func init() {
 }
 
 func main() {
+	http.EnableHTTPDebug = true
+
 	var h HTTP
 	h.Load(tpl)
 	h.Do()
