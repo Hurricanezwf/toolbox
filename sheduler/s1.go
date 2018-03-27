@@ -32,7 +32,7 @@ func (c *S1Conf) Validate() error {
 		return errors.New("S1Conf: Too large 'Maxconcurrency', max is 10000")
 	}
 
-	if c.QueueSize <= 0 {
+	if c.QueueSize < 0 {
 		return errors.New("S1Conf: Missing 'QueueSize'")
 	}
 	if c.QueueSize > 50000 {
