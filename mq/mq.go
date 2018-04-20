@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"sync"
 	"time"
-	"unialarm/mmessager/log"
+
+	"github.com/Hurricanezwf/toolbox/log"
 
 	"github.com/streadway/amqp"
 )
