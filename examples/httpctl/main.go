@@ -1,0 +1,34 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+
+	"github.com/Hurricanezwf/toolbox/httpctl"
+)
+
+func main() {
+	ctl := httpctl.New(time.Second, 10)
+
+	count := 1000
+	rp := make(chan struct{}, 20)
+	rand.Seed(time.Now().UnixNano())
+
+	go func() {
+		for i := 0; i < count; i++ {
+			err := ctl.Do(func() {
+				time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+				rp <- struct{}{}
+			})
+			if err != nil {
+				panic(err.Error())
+			}
+		}
+	}()
+
+	for ; count > 0; count-- {
+		<-rp
+		fmt.Printf("remain: %d\n", count-1)
+	}
+}
