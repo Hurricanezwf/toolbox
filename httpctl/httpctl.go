@@ -17,8 +17,14 @@ type HTTPCtl struct {
 	// 阻塞超时
 	blockTimeout time.Duration
 
-	// 资源池
-	pool chan struct{}
+	// 缓冲队列，用于存放受控制的名额
+	cachedQueue chan struct{}
+
+	// 正式队列，用于存放实际可消费的名额
+	queue chan struct{}
+
+	// 控制HTTPCtl关闭
+	stopC chan struct{}
 }
 
 func New(interval time.Duration, limit int) *HTTPCtl {
@@ -29,22 +35,36 @@ func New(interval time.Duration, limit int) *HTTPCtl {
 	ctl := &HTTPCtl{
 		limit:        limit,
 		blockTimeout: 30 * time.Second,
-		pool:         make(chan struct{}, limit),
+		cachedQueue:  make(chan struct{}, limit),
+		queue:        make(chan struct{}, limit),
+		stopC:        make(chan struct{}),
 	}
 
-	// 定时补充资源
-	// 截取当前时间点时剩余的资源从而计算出需要补充的资源，然后进行填充
+	// 填充资源额度
+	for ; limit > 0; limit-- {
+		ctl.queue <- struct{}{}
+	}
+
+	// 定时将请求额度从缓冲队列搬到正式队列
 	go func() {
 		for {
-			remain := len(ctl.pool)
-			for add := ctl.limit - remain; add > 0; add-- {
-				ctl.pool <- struct{}{}
+			ticker := time.NewTicker(interval)
+			select {
+			case <-ctl.stopC:
+				return
+			case <-ticker.C:
+				for cnt := len(ctl.cachedQueue); cnt > 0; cnt-- {
+					ctl.queue <- <-ctl.cachedQueue
+				}
 			}
-			time.Sleep(interval)
 		}
 	}()
 
 	return ctl
+}
+
+func (ctl *HTTPCtl) Close() {
+	close(ctl.stopC)
 }
 
 func (ctl *HTTPCtl) SetBlockTimeout(timeout time.Duration) *HTTPCtl {
@@ -56,12 +76,15 @@ type RequestFunc func()
 
 func (ctl *HTTPCtl) Do(f RequestFunc) error {
 	select {
-	case _, ok := <-ctl.pool:
-		if !ok {
-			return ErrClosed
-		}
+	case <-ctl.stopC:
+		return ErrClosed
+	case v := <-ctl.queue:
 		// 并发调用
-		go f()
+		go func() {
+			//fmt.Printf("[%d]\n", time.Now().Unix())
+			f()
+			ctl.cachedQueue <- v // 使用完成后统一丢入缓冲队列，后续统一刷入正式队列
+		}()
 	case <-time.After(ctl.blockTimeout):
 		return ErrTimeout
 	}

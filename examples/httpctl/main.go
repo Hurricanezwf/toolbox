@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -9,7 +8,7 @@ import (
 )
 
 func main() {
-	ctl := httpctl.New(time.Second, 10)
+	ctl := httpctl.New(time.Second, 3)
 
 	count := 1000
 	rp := make(chan struct{}, 20)
@@ -18,7 +17,7 @@ func main() {
 	go func() {
 		for i := 0; i < count; i++ {
 			err := ctl.Do(func() {
-				time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+				time.Sleep(time.Duration(rand.Intn(5000)) * time.Millisecond)
 				rp <- struct{}{}
 			})
 			if err != nil {
@@ -29,6 +28,5 @@ func main() {
 
 	for ; count > 0; count-- {
 		<-rp
-		fmt.Printf("remain: %d\n", count-1)
 	}
 }
