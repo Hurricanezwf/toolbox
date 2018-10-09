@@ -51,6 +51,7 @@ func New(interval time.Duration, limit int) *HTTPCtl {
 			ticker := time.NewTicker(interval)
 			select {
 			case <-ctl.stopC:
+				ticker.Stop()
 				return
 			case <-ticker.C:
 				for cnt := len(ctl.cachedQueue); cnt > 0; cnt-- {
