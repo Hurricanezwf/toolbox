@@ -2,6 +2,7 @@ package httpctl
 
 import (
 	"errors"
+	"math"
 	"time"
 )
 
@@ -34,7 +35,7 @@ func New(interval time.Duration, limit int) *HTTPCtl {
 
 	ctl := &HTTPCtl{
 		limit:        limit,
-		blockTimeout: 30 * time.Second,
+		blockTimeout: time.Duration(math.MaxInt64),
 		cachedQueue:  make(chan struct{}, limit),
 		queue:        make(chan struct{}, limit),
 		stopC:        make(chan struct{}),
