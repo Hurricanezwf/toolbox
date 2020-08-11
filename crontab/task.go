@@ -77,6 +77,11 @@ func NewTask(tname, spec string, f TaskFunc, fParam interface{}) *Task {
 	return t
 }
 
+func (t *Task) ResetBaseTime(baseTime time.Time) *Task {
+	t.base = baseTime
+	return t
+}
+
 func (t *Task) doFuncCall() {
 	t.DoFunc(t.FuncParam)
 }

@@ -1,9 +1,11 @@
 package crontab
 
 import (
+	"context"
 	"errors"
 	"sync"
 	"time"
+
 	"github.com/Hurricanezwf/toolbox/crontab/heap"
 )
 
@@ -15,28 +17,19 @@ type Crond struct {
 	mutex sync.RWMutex
 	h     *heap.MinHeap
 
+	ctx      context.Context
 	changedC chan bool
-
-	running bool
-	stopC   chan struct{}
 }
 
-func NewCrond() *Crond {
+func NewCrond(ctx context.Context) *Crond {
 	return &Crond{
-		h:        heap.NewMinHeap(1024),
-		changedC: make(chan bool),
-		stopC:    make(chan struct{}),
-		running:  false,
+		h:        heap.NewMinHeap(102400),
+		ctx:      ctx,
+		changedC: make(chan bool, 5),
 	}
 }
 
 func (c *Crond) Run() {
-	if c.running {
-		return
-	}
-
-	c.running = true
-
 	for {
 		sleep := func() time.Duration {
 			waitTime := forever
@@ -61,7 +54,7 @@ func (c *Crond) Run() {
 		}()
 
 		select {
-		case <-c.stopC:
+		case <-c.ctx.Done():
 			return
 		case <-c.changedC:
 			continue
@@ -70,11 +63,6 @@ func (c *Crond) Run() {
 			continue
 		}
 	}
-}
-
-func (c *Crond) Close() {
-	close(c.stopC)
-	c.running = false
 }
 
 func (c *Crond) Add(t *Task, notifyChange bool) error {
@@ -104,10 +92,7 @@ func (c *Crond) Add(t *Task, notifyChange bool) error {
 	})
 	c.mutex.Unlock()
 	if setCount > 0 {
-		if notifyChange {
-			c.changedC <- true
-		}
-		return nil
+		return c.unblockNotifyChange(notifyChange, true)
 	}
 
 	// 2. heap中无同一时刻执行的任务元素，新建一个
@@ -121,11 +106,7 @@ func (c *Crond) Add(t *Task, notifyChange bool) error {
 		return err
 	}
 
-	if notifyChange {
-		c.changedC <- true
-	}
-
-	return nil
+	return c.unblockNotifyChange(notifyChange, true)
 }
 
 func (c *Crond) Del(taskName string) int {
@@ -145,7 +126,7 @@ func (c *Crond) Del(taskName string) int {
 	})
 	c.mutex.Unlock()
 	if affected > 0 {
-		c.changedC <- true
+		c.unblockNotifyChange(true, true)
 	}
 	return affected
 }
@@ -175,4 +156,16 @@ func (c *Crond) PopAndRepush(doFunc bool) {
 		t.setNext()
 		c.Add(t, false)
 	}
+}
+
+func (c *Crond) unblockNotifyChange(doNotify, notifyValue bool) error {
+	if !doNotify {
+		return nil
+	}
+	select {
+	case <-c.ctx.Done():
+		return c.ctx.Err()
+	case c.changedC <- notifyValue:
+	}
+	return nil
 }

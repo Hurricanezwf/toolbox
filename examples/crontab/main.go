@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"runtime"
 	"strings"
 	"time"
+
 	"github.com/Hurricanezwf/toolbox/crontab"
 )
+
+var cron = crontab.New()
 
 func init() {
 	http.HandleFunc("/add", Add)
@@ -17,10 +19,6 @@ func init() {
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
-	crontab.Open()
-
 	http.ListenAndServe(":10000", nil)
 }
 
@@ -47,7 +45,8 @@ func Add(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t := crontab.NewTask(taskName, spec, Do, taskName)
-	if err := crontab.Add(t); err != nil {
+	if err := cron.Add(t); err != nil {
+		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte(err.Error()))
 		return
 	}
@@ -67,7 +66,12 @@ func Del(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[/del] taskname: %s\n", taskName)
 
-	affeted := crontab.Del(taskName)
+	affeted, err := cron.Del(taskName)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
 	w.Write([]byte(fmt.Sprintf("Del success, %d affeted", affeted)))
 }
 
@@ -79,7 +83,12 @@ func List(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[/list]")
 
-	res := crontab.List()
+	res, err := cron.List()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
 	str := strings.Join(res, "\n")
 	w.Write([]byte(str))
 }
