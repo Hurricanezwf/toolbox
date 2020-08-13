@@ -48,22 +48,18 @@ func (s *weekScheduler) Prev(baseTime time.Time) time.Time {
 		return time.Date(t.Year(), t.Month(), t.Day(), findBiggestHour(s.hour), findBiggestMinute(s.minute), 0, 0, t.Location())
 	}
 
-	// << 如果当前分钟匹配不上 >>
-	if !isMatch(1<<uint64(baseTime.Minute()), s.minute) {
-		// 找另一个可执行的分钟
-		if prevMinute := findPrevMinute(baseTime.Minute(), s.minute); prevMinute >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), prevMinute, 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的小时的最晚的时间
-		if prevHour := findPrevHour(baseTime.Hour(), s.hour); prevHour >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), prevHour, findBiggestMinute(s.minute), 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的weekday的最早时间
-		t := findPrevWeekday(baseTime, s.weekday)
-		return time.Date(t.Year(), t.Month(), t.Day(), findBiggestHour(s.hour), findBiggestMinute(s.minute), 0, 0, baseTime.Location())
+	// << 不管分钟能否匹配的上，都要找前一次的执行时间 >>
+	// 找另一个可执行的分钟
+	if prevMinute := findPrevMinute(baseTime.Minute(), s.minute); prevMinute >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), prevMinute, 0, 0, baseTime.Location())
 	}
-	// << 我靠，所有的都能匹配的上 >>
-	return baseTime
+	// 找另一个可执行的小时的最晚的时间
+	if prevHour := findPrevHour(baseTime.Hour(), s.hour); prevHour >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), prevHour, findBiggestMinute(s.minute), 0, 0, baseTime.Location())
+	}
+	// 找另一个可执行的weekday的最早时间
+	t := findPrevWeekday(baseTime, s.weekday)
+	return time.Date(t.Year(), t.Month(), t.Day(), findBiggestHour(s.hour), findBiggestMinute(s.minute), 0, 0, baseTime.Location())
 }
 
 func (s *weekScheduler) Next(baseTime time.Time) time.Time {
@@ -85,22 +81,18 @@ func (s *weekScheduler) Next(baseTime time.Time) time.Time {
 		return time.Date(t.Year(), t.Month(), t.Day(), findSmallestHour(s.hour), findSmallestMinute(s.minute), 0, 0, t.Location())
 	}
 
-	// << 如果当前分钟匹配不上 >>
-	if !isMatch(1<<uint64(baseTime.Minute()), s.minute) {
-		// 找另一个可执行的分钟
-		if nextMinute := findNextMinute(baseTime.Minute(), s.minute); nextMinute >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), nextMinute, 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的小时的最早的时间
-		if nextHour := findNextHour(baseTime.Hour(), s.hour); nextHour >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), nextHour, findSmallestMinute(s.minute), 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的weekday的最早时间
-		t := findNextWeekday(baseTime, s.weekday)
-		return time.Date(t.Year(), t.Month(), t.Day(), findSmallestHour(s.hour), findSmallestMinute(s.minute), 0, 0, t.Location())
+	// << 不管分钟能否匹配的上，都要取下一次的执行时间 >>
+	// 找另一个可执行的分钟
+	if nextMinute := findNextMinute(baseTime.Minute(), s.minute); nextMinute >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), nextMinute, 0, 0, baseTime.Location())
 	}
-	// << 我靠，所有的都能匹配的上 >>
-	return baseTime
+	// 找另一个可执行的小时的最早的时间
+	if nextHour := findNextHour(baseTime.Hour(), s.hour); nextHour >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), nextHour, findSmallestMinute(s.minute), 0, 0, baseTime.Location())
+	}
+	// 找另一个可执行的weekday的最早时间
+	t := findNextWeekday(baseTime, s.weekday)
+	return time.Date(t.Year(), t.Month(), t.Day(), findSmallestHour(s.hour), findSmallestMinute(s.minute), 0, 0, t.Location())
 }
 
 // monthScheduler 以月为周期的定时调度
@@ -146,22 +138,18 @@ func (s *monthScheduler) Prev(baseTime time.Time) time.Time {
 		return time.Date(t.Year(), t.Month(), t.Day(), findBiggestHour(s.hour), findBiggestMinute(s.minute), 0, 0, t.Location())
 	}
 
-	// << 如果当前分钟匹配不上 >>
-	if !isMatch(1<<uint64(baseTime.Minute()), s.minute) {
-		// 找另一个可执行的分钟
-		if prevMinute := findPrevMinute(baseTime.Minute(), s.minute); prevMinute >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), prevMinute, 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的小时的最晚的时间
-		if prevHour := findPrevHour(baseTime.Hour(), s.hour); prevHour >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), prevHour, findBiggestMinute(s.minute), 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的monthday的最早时间
-		t := findPrevMonthday(baseTime, s.monthday)
-		return time.Date(t.Year(), t.Month(), t.Day(), findBiggestHour(s.hour), findBiggestMinute(s.minute), 0, 0, baseTime.Location())
+	// << 不管分钟能否匹配的上，都要取前一次的执行时间 >>
+	// 找另一个可执行的分钟
+	if prevMinute := findPrevMinute(baseTime.Minute(), s.minute); prevMinute >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), prevMinute, 0, 0, baseTime.Location())
 	}
-	// << 我靠，所有的都能匹配的上 >>
-	return baseTime
+	// 找另一个可执行的小时的最晚的时间
+	if prevHour := findPrevHour(baseTime.Hour(), s.hour); prevHour >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), prevHour, findBiggestMinute(s.minute), 0, 0, baseTime.Location())
+	}
+	// 找另一个可执行的monthday的最早时间
+	t := findPrevMonthday(baseTime, s.monthday)
+	return time.Date(t.Year(), t.Month(), t.Day(), findBiggestHour(s.hour), findBiggestMinute(s.minute), 0, 0, baseTime.Location())
 }
 
 func (s *monthScheduler) Next(baseTime time.Time) time.Time {
@@ -183,22 +171,17 @@ func (s *monthScheduler) Next(baseTime time.Time) time.Time {
 		return time.Date(t.Year(), t.Month(), t.Day(), findSmallestHour(s.hour), findSmallestMinute(s.minute), 0, 0, t.Location())
 	}
 
-	// << 如果当前分钟匹配不上 >>
-	if !isMatch(1<<uint64(baseTime.Minute()), s.minute) {
-		// 找另一个可执行的分钟
-		if nextMinute := findNextMinute(baseTime.Minute(), s.minute); nextMinute >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), nextMinute, 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的小时的最早的时间
-		if nextHour := findNextHour(baseTime.Hour(), s.hour); nextHour >= 0 {
-			return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), nextHour, findSmallestMinute(s.minute), 0, 0, baseTime.Location())
-		}
-		// 找另一个可执行的monthday的最早时间
-		t := findNextMonthday(baseTime, s.monthday)
-		return time.Date(t.Year(), t.Month(), t.Day(), findSmallestHour(s.hour), findSmallestMinute(s.minute), 0, 0, t.Location())
+	// << 不管分钟是否能匹配，都要找下一次的执行时间 >>
+	if nextMinute := findNextMinute(baseTime.Minute(), s.minute); nextMinute >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), baseTime.Hour(), nextMinute, 0, 0, baseTime.Location())
 	}
-	// << 我靠，所有的都能匹配的上 >>
-	return baseTime
+	// 找另一个可执行的小时的最早的时间
+	if nextHour := findNextHour(baseTime.Hour(), s.hour); nextHour >= 0 {
+		return time.Date(baseTime.Year(), baseTime.Month(), baseTime.Day(), nextHour, findSmallestMinute(s.minute), 0, 0, baseTime.Location())
+	}
+	// 找另一个可执行的monthday的最早时间
+	t := findNextMonthday(baseTime, s.monthday)
+	return time.Date(t.Year(), t.Month(), t.Day(), findSmallestHour(s.hour), findSmallestMinute(s.minute), 0, 0, t.Location())
 }
 
 func isMatch(v1, v2 uint64) bool {

@@ -8,12 +8,15 @@ import (
 	"time"
 
 	"github.com/Hurricanezwf/toolbox/crontab"
+	"github.com/Hurricanezwf/toolbox/crontab/scheduler"
+	"github.com/Hurricanezwf/toolbox/crontab/scheduler/types"
 )
 
 var cron = crontab.New()
 
 func init() {
-	http.HandleFunc("/add", Add)
+	http.HandleFunc("/add/basic", AddBasic)
+	http.HandleFunc("/add/pro", AddPro)
 	http.HandleFunc("/del", Del)
 	http.HandleFunc("/list", List)
 }
@@ -22,7 +25,7 @@ func main() {
 	http.ListenAndServe(":10000", nil)
 }
 
-func Add(w http.ResponseWriter, r *http.Request) {
+func AddBasic(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(405)
 		return
@@ -37,14 +40,53 @@ func Add(w http.ResponseWriter, r *http.Request) {
 	taskName = r.FormValue("taskname")
 	spec = r.FormValue("spec")
 
-	log.Printf("[/add] taskname:%s, spec: %s\n", taskName, spec)
+	log.Printf("[/add/basic] taskname:%s, spec: %s\n", taskName, spec)
 
-	if !crontab.SpecValid(spec) {
+	sche, err := scheduler.GetParser(types.ParserBasic).Parse(spec)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte("Invalid spec"))
 		return
 	}
 
-	t := crontab.NewTask(taskName, spec, Do, taskName)
+	t := crontab.NewTask(taskName, spec, sche, func() error {
+		return Do(taskName)
+	})
+	if err := cron.Add(t); err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	w.Write([]byte("Add success"))
+}
+
+func AddPro(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.WriteHeader(405)
+		return
+	}
+
+	var (
+		taskName string
+		spec     string
+	)
+
+	r.ParseForm()
+	taskName = r.FormValue("taskname")
+	spec = r.FormValue("spec")
+
+	log.Printf("[/add/pro] taskname:%s, spec: %s\n", taskName, spec)
+
+	sche, err := scheduler.GetParser(types.ParserPro).Parse(spec)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("Invalid spec"))
+		return
+	}
+
+	t := crontab.NewTask(taskName, spec, sche, func() error {
+		return Do(taskName)
+	})
 	if err := cron.Add(t); err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte(err.Error()))

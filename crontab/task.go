@@ -7,15 +7,14 @@ import (
 	"github.com/Hurricanezwf/toolbox/crontab/scheduler/types"
 )
 
-type TaskFunc func(param interface{}) error
+type TaskFunc func() error
 
 type Task struct {
 	// 任务名
 	TaskName string
 
 	// 任务到点后的执行函数
-	DoFunc    TaskFunc
-	FuncParam interface{}
+	DoFunc TaskFunc
 
 	// crontab的执行时间配置
 	specStr   string
@@ -32,7 +31,7 @@ func NewTask(
 	tname string,
 	specStr string,
 	scheduler types.Scheduler,
-	f TaskFunc, fParam interface{},
+	f TaskFunc,
 ) *Task {
 
 	return &Task{
@@ -40,7 +39,6 @@ func NewTask(
 		specStr:   specStr,
 		scheduler: scheduler,
 		DoFunc:    f,
-		FuncParam: fParam,
 		base:      time.Now().Local(),
 	}
 }
@@ -51,7 +49,7 @@ func (t *Task) ResetBaseTime(baseTime time.Time) *Task {
 }
 
 func (t *Task) doFuncCall() {
-	t.DoFunc(t.FuncParam)
+	t.DoFunc()
 }
 
 func (t *Task) setNext() {
