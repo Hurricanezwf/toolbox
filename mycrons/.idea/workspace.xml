@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/main_test.go" line="14" />
+    <bookmark url="file://$PROJECT_DIR$/scheduler_test.go" line="14" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="775f939c-2c17-4b29-9284-5e65e9a316e5" name="Default Changelist" comment="" />
+    <list default="true" id="775f939c-2c17-4b29-9284-5e65e9a316e5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/parser.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/parser_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/scheduler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/scheduler_test.go" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,48 +19,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="27" column="25" lean-forward="true" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="25" />
-              <folding>
-                <element signature="n#!!block;n#Prev#0" />
-                <element signature="n#!!block;n#Next#0" />
-                <element signature="e#595#632#0" />
-                <element signature="e#660#697#0" />
-                <element signature="e#716#750#0" />
-                <element signature="e#828#980#0" />
-                <element signature="e#1137#1144#0" />
-                <element signature="e#1607#1609#0" />
-                <element signature="e#1654#1663#0" />
-                <element signature="e#1873#1875#0" />
-                <element signature="n#!!block;n#findNextWeekday#0" />
-                <element signature="n#!!block;n#findPrevWeekday#0" />
-                <element signature="n#!!block;n#findEarlistHour#0" />
-                <element signature="n#!!block;n#findLatestHour#0" />
-                <element signature="n#!!block;n#findHourAfter#0" />
-                <element signature="n#!!block;n#findPrevHour#0" />
-                <element signature="n#!!block;n#findEarlistMinute#0" />
-                <element signature="n#!!block;n#findSmallestMinute#1" />
-                <element signature="n#!!block;n#findNextMinute#0" />
-                <element signature="n#!!block;n#findPrevMinute#0" />
-                <element signature="n#!!block;n#isMatch#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main_test.go">
+        <entry file="file://$PROJECT_DIR$/scheduler_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="125" column="25" selection-start-line="125" selection-start-column="25" selection-end-line="125" selection-end-column="25" />
+            <state relative-caret-position="567">
+              <caret line="227" column="4" selection-start-line="227" selection-start-column="4" selection-end-line="227" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>NewWeekOfDayScheduler</find>
+      <find>Week</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>newWeekScheduler</replace>
+      <replace>Month</replace>
+    </replaceStrings>
   </component>
   <component name="GOROOT" path="$PROJECT_DIR$/../../../../../../.local/src/go" />
   <component name="Git.Settings">
@@ -65,18 +56,14 @@
       <list>
         <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/main_test.go" />
+        <option value="$PROJECT_DIR$/parser.go" />
+        <option value="$PROJECT_DIR$/parser_test.go" />
+        <option value="$PROJECT_DIR$/scheduler.go" />
+        <option value="$PROJECT_DIR$/scheduler_test.go" />
       </list>
     </option>
   </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/watcherTasks.xml" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -101,7 +88,9 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="NewWatcherDialog.advanced.open" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.import.settings.migrated" value="true" />
@@ -109,7 +98,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="watcher.settings" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -124,11 +113,11 @@
     </option>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
+    <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18669528" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990099" visible="true" weight="0.13897763" />
+      <window_info id="Structure" order="1" sideWeight="0.5009901" side_tool="true" weight="0.13897763" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -140,7 +129,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32771084" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.43762377" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -151,18 +140,6 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/main.go</url>
-          <line>31</line>
-          <properties />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/../../../../../../.local/src/go/src/time/zoneinfo.go">
       <provider selected="true" editor-type-id="text-editor">
@@ -171,47 +148,140 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../../../.local/src/go/src/time/time.go">
+    <entry file="file://$PROJECT_DIR$/../../../../../../.local/src/go/src/strings/strings.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="328">
-          <caret line="1446" column="14" selection-start-line="1446" selection-start-column="14" selection-end-line="1446" selection-end-column="14" />
+          <caret line="97" column="5" selection-start-line="97" selection-start-column="5" selection-end-line="97" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
+    <entry file="file://$PROJECT_DIR$/parser.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="27" column="25" lean-forward="true" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="25" />
+        <state relative-caret-position="269">
+          <caret line="178" column="4" selection-start-line="178" selection-start-column="4" selection-end-line="178" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../.local/src/go/src/testing/testing.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="707" column="17" selection-start-line="707" selection-start-column="17" selection-end-line="707" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2151">
+          <caret line="16" column="48" selection-start-line="16" selection-start-column="48" selection-end-line="16" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../../../.local/src/go/src/time/time.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="867" column="14" selection-start-line="867" selection-start-column="14" selection-end-line="867" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scheduler.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
           <folding>
+            <element signature="e#92#229#0" />
+            <element signature="e#278#365#0" />
+            <element signature="n#!!block;n#newWeekScheduler#0" />
+            <element signature="e#463#500#0" />
+            <element signature="e#525#559#0" />
+            <element signature="e#586#622#0" />
+            <element signature="e#458#518#0" />
             <element signature="n#!!block;n#Prev#0" />
+            <element signature="e#855#1049#0" />
+            <element signature="e#1121#1562#0" />
+            <element signature="e#1211#1353#0" />
+            <element signature="e#1638#2306#0" />
+            <element signature="e#1736#1868#0" />
+            <element signature="e#1961#2103#0" />
             <element signature="n#!!block;n#Next#0" />
-            <element signature="e#595#632#0" />
-            <element signature="e#660#697#0" />
-            <element signature="e#716#750#0" />
-            <element signature="e#828#980#0" />
-            <element signature="e#1137#1144#0" />
-            <element signature="e#1607#1609#0" />
-            <element signature="e#1654#1663#0" />
-            <element signature="e#1873#1875#0" />
-            <element signature="n#!!block;n#findNextWeekday#0" />
-            <element signature="n#!!block;n#findPrevWeekday#0" />
-            <element signature="n#!!block;n#findEarlistHour#0" />
-            <element signature="n#!!block;n#findLatestHour#0" />
-            <element signature="n#!!block;n#findHourAfter#0" />
-            <element signature="n#!!block;n#findPrevHour#0" />
-            <element signature="n#!!block;n#findEarlistMinute#0" />
-            <element signature="n#!!block;n#findSmallestMinute#1" />
-            <element signature="n#!!block;n#findNextMinute#0" />
-            <element signature="n#!!block;n#findPrevMinute#0" />
+            <element signature="e#2471#2667#0" />
+            <element signature="e#2739#3183#0" />
+            <element signature="e#2829#2972#0" />
+            <element signature="e#3259#3923#0" />
+            <element signature="e#3357#3489#0" />
+            <element signature="e#3582#3725#0" />
+            <element signature="e#4228#4319#0" />
+            <element signature="n#!!block;n#newMonthScheduler#0" />
+            <element signature="e#4421#4459#0" />
+            <element signature="e#4484#4518#0" />
+            <element signature="e#4545#4581#0" />
+            <element signature="e#4416#4480#0" />
+            <element signature="n#!!block;n#Prev#1" />
+            <element signature="e#4601#4795#0" />
+            <element signature="e#4867#5308#0" />
+            <element signature="e#4957#5099#0" />
+            <element signature="e#5384#6052#0" />
+            <element signature="e#5482#5614#0" />
+            <element signature="e#5707#5849#0" />
+            <element signature="n#!!block;n#Next#1" />
+            <element signature="e#4912#5093#0" />
+            <element signature="e#5165#5576#0" />
+            <element signature="e#5247#5384#0" />
+            <element signature="e#5652#6277#0" />
+            <element signature="e#5742#5874#0" />
+            <element signature="e#5961#6098#0" />
             <element signature="n#!!block;n#isMatch#0" />
+            <element signature="n#!!block;n#findSmallestHour#1" />
+            <element signature="e#6610#6671#0" />
+            <element signature="e#6552#6569#0" />
+            <element signature="e#7956#8018#0" />
+            <element signature="n#!!block;n#findBiggestHour#0" />
+            <element signature="e#6838#6899#0" />
+            <element signature="e#6879#6896#0" />
+            <element signature="e#8182#8242#0" />
+            <element signature="n#!!block;n#findSmallestMinute#0" />
+            <element signature="e#7069#7132#0" />
+            <element signature="e#7112#7129#0" />
+            <element signature="e#8413#8481#0" />
+            <element signature="n#!!block;n#findBiggestMinute#0" />
+            <element signature="e#7309#7372#0" />
+            <element signature="e#7352#7369#0" />
+            <element signature="e#8651#8718#0" />
+            <element signature="n#!!block;n#findNextHour#0" />
+            <element signature="e#7566#7627#0" />
+            <element signature="e#7607#7624#0" />
+            <element signature="n#!!block;n#findPrevHour#0" />
+            <element signature="e#7733#7794#0" />
+            <element signature="e#7774#7791#0" />
+            <element signature="n#!!block;n#findNextMinute#0" />
+            <element signature="e#7907#7968#0" />
+            <element signature="e#7948#7965#0" />
+            <element signature="n#!!block;n#findPrevMinute#0" />
+            <element signature="e#8080#8141#0" />
+            <element signature="e#8121#8138#0" />
+            <element signature="n#!!block;n#findNextWeekday#0" />
+            <element signature="e#8269#8369#0" />
+            <element signature="e#8349#8366#0" />
+            <element signature="e#9640#9704#0" />
+            <element signature="n#!!block;n#findPrevWeekday#0" />
+            <element signature="e#8590#8691#0" />
+            <element signature="e#8671#8688#0" />
+            <element signature="e#9962#10026#0" />
+            <element signature="n#!!block;n#findNextMonthday#0" />
+            <element signature="e#8812#8814#0" />
+            <element signature="e#8891#8900#0" />
+            <element signature="e#10304#10371#0" />
+            <element signature="n#!!block;n#findNextMonthday#1" />
+            <element signature="e#9159#9166#0" />
+            <element signature="e#9237#9239#0" />
+            <element signature="e#10630#10697#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_test.go">
+    <entry file="file://$PROJECT_DIR$/scheduler_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="125" column="25" selection-start-line="125" selection-start-column="25" selection-end-line="125" selection-end-column="25" />
+        <state relative-caret-position="567">
+          <caret line="227" column="4" selection-start-line="227" selection-start-column="4" selection-end-line="227" selection-end-column="4" />
         </state>
       </provider>
     </entry>
