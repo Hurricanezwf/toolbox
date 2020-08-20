@@ -27,6 +27,9 @@ type Crontab interface {
 
 	// List 查询所有任务
 	List() ([]string, error)
+
+	// Clear 清楚所有任务
+	Clear() error
 }
 
 // crontab 实现了 Crontab 接口
@@ -110,6 +113,18 @@ func (c *crontab) List() ([]string, error) {
 		res = append(res, t.String())
 	}
 	return res, nil
+}
+
+func (c *crontab) Clear() error {
+	if c.checkClosed() {
+		return nil, ErrClosed
+	}
+
+	c.mutex.Lock()
+	c.crond.Clear()
+	c.tasksrd = make(map[string]*Task)
+	c.mutex.Unlock()
+	return nil
 }
 
 func (c *crontab) checkClosed() bool {
