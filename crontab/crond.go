@@ -160,7 +160,7 @@ func (c *Crond) PopAndRepush(doFunc bool) {
 
 func (c *Crond) Clear() {
 	c.mutex.Lock()
-	c.heap = heap.NewMinHeap(102400)
+	c.h = heap.NewMinHeap(102400)
 	c.mutex.Unlock()
 }
 
