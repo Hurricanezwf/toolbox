@@ -117,7 +117,7 @@ func (c *crontab) List() ([]string, error) {
 
 func (c *crontab) Clear() error {
 	if c.checkClosed() {
-		return nil, ErrClosed
+		return ErrClosed
 	}
 
 	c.mutex.Lock()
