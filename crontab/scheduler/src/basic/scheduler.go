@@ -189,7 +189,7 @@ func isMatch(v1, v2 uint64) bool {
 }
 
 func findSmallestHour(hourBits uint64) int {
-	for i := 1; i <= 23; i++ {
+	for i := 0; i <= 23; i++ {
 		if isMatch(hourBits, 1<<uint64(i)) {
 			return i
 		}
@@ -199,7 +199,7 @@ func findSmallestHour(hourBits uint64) int {
 }
 
 func findBiggestHour(hourBits uint64) int {
-	for i := 23; i >= 1; i-- {
+	for i := 23; i >= 0; i-- {
 		if isMatch(hourBits, 1<<uint64(i)) {
 			return i
 		}
@@ -209,7 +209,7 @@ func findBiggestHour(hourBits uint64) int {
 }
 
 func findSmallestMinute(minuteBits uint64) int {
-	for i := 1; i <= 59; i++ {
+	for i := 0; i <= 59; i++ {
 		if isMatch(minuteBits, 1<<uint64(i)) {
 			return i
 		}
