@@ -54,6 +54,11 @@ func TestWeekScheduler_Prev(t *testing.T) {
 	if !newWeekScheduler(1<<30|1<<45, 1<<10|1<<22, 1<<2).Prev(baseTime).Equal(result) {
 		t.Fatalf("failed")
 	}
+	baseTime = time.Date(2020, 8, 11, 10, 20, 0, 0, loc)
+	result = time.Date(2020, 8, 11, 10, 00, 0, 0, loc)
+	if !newWeekScheduler(1<<0|1<<30, 1<<10|1<<22, 1<<2).Prev(baseTime).Equal(result) {
+		t.Fatalf("failed")
+	}
 
 	// 都能匹配的上的
 	baseTime = time.Date(2020, 8, 11, 22, 45, 0, 0, loc)
@@ -132,6 +137,11 @@ func TestWeekScheduler_Next(t *testing.T) {
 	if !newWeekScheduler(1<<30|1<<45, 1<<10|1<<18, 1<<2).Next(baseTime).Equal(result) {
 		t.Fatalf("failed")
 	}
+	baseTime = time.Date(2020, 8, 11, 10, 50, 0, 0, loc)
+	result = time.Date(2020, 8, 11, 18, 00, 0, 0, loc)
+	if !newWeekScheduler(1<<0|1<<30, 1<<10|1<<18, 1<<2).Next(baseTime).Equal(result) {
+		t.Fatalf("failed")
+	}
 
 	// 都能匹配的上
 	baseTime = time.Date(2020, 8, 11, 10, 45, 0, 0, loc)
@@ -144,6 +154,13 @@ func TestWeekScheduler_Next(t *testing.T) {
 	baseTime = time.Date(2019, 12, 31, 10, 48, 0, 0, loc)
 	result = time.Date(2020, 1, 1, 10, 30, 0, 0, loc)
 	if !newWeekScheduler(1<<30, 1<<10, 1<<3).Next(baseTime).Equal(result) {
+		t.Fatalf("failed")
+	}
+
+	// extra
+	baseTime = time.Date(2020, 9, 14, 11, 24, 23, 0, loc)
+	result = time.Date(2020, 9, 16, 10, 0, 0, 0, loc)
+	if !newWeekScheduler(1<<0, 1<<10, 1<<1|1<<3|1<<5).Next(baseTime).Equal(result) {
 		t.Fatalf("failed")
 	}
 }
