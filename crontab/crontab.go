@@ -19,11 +19,11 @@ type Crontab interface {
 
 	// Add 添加任务
 	// 如果同名任务已经存在，则返回 ErrExist
-	Add(t *Task) error
+	Add(t *Task, dryrun bool) error
 
 	// Del 根据任务名删除
 	// 如果任务不存在则返回 ErrNotFound
-	Del(taskName string) (affected int, err error)
+	Del(taskName string, dryrun bool) (affected int, err error)
 
 	// List 查询所有任务
 	List() ([]string, error)
@@ -60,7 +60,7 @@ func (c *crontab) Close() {
 	})
 }
 
-func (c *crontab) Add(t *Task) error {
+func (c *crontab) Add(t *Task, dryrun bool) error {
 	if c.checkClosed() {
 		return ErrClosed
 	}
@@ -74,6 +74,9 @@ func (c *crontab) Add(t *Task) error {
 	if _, ok := c.tasksrd[t.TaskName]; ok {
 		return ErrExist
 	}
+	if dryrun {
+		return nil
+	}
 	if err := c.crond.Add(t, true); err != nil {
 		return err
 	}
@@ -82,7 +85,7 @@ func (c *crontab) Add(t *Task) error {
 	return nil
 }
 
-func (c *crontab) Del(taskName string) (affected int, err error) {
+func (c *crontab) Del(taskName string, dryrun bool) (affected int, err error) {
 	if c.checkClosed() {
 		return 0, ErrClosed
 	}
@@ -92,6 +95,9 @@ func (c *crontab) Del(taskName string) (affected int, err error) {
 
 	if _, ok := c.tasksrd[taskName]; !ok {
 		return 0, ErrNotFound
+	}
+	if dryrun {
+		return 0, nil
 	}
 	affected = c.crond.Del(taskName)
 	if affected > 0 {
